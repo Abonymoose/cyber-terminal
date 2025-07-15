@@ -1,0 +1,749 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Fira Code', monospace;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  color: #00ff41;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 65, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(0, 255, 65, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-shadow: 0 0 20px #00ff41;
+  background: linear-gradient(45deg, #00ff41, #00cc33, #39ff14);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { filter: drop-shadow(0 0 10px #00ff41); }
+  to { filter: drop-shadow(0 0 30px #00ff41); }
+}
+
+h2 {
+  color: #00ff41;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 0 0 10px #00ff41;
+}
+
+/* Nickname Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  border: 2px solid #00ff41;
+  border-radius: 15px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 
+    0 0 50px rgba(0, 255, 65, 0.5),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  animation: modalAppear 0.5s ease-out;
+}
+
+@keyframes modalAppear {
+  from { 
+    opacity: 0; 
+    transform: scale(0.8) translateY(-50px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  color: #00ff41;
+}
+
+.modal-content p {
+  color: #00aa33;
+  margin-bottom: 20px;
+  font-family: 'Fira Code', monospace;
+}
+
+#nickname-input {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(0, 20, 0, 0.8);
+  border: 2px solid #003300;
+  border-radius: 8px;
+  color: #00ff41;
+  font-family: 'Fira Code', monospace;
+  font-size: 16px;
+  text-align: center;
+}
+
+#nickname-input:focus {
+  outline: none;
+  border-color: #00ff41;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+}
+
+#set-nickname-btn {
+  padding: 15px 25px;
+  background: linear-gradient(45deg, #00ff41, #39ff14);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 14px;
+}
+
+#set-nickname-btn:hover {
+  background: linear-gradient(45deg, #39ff14, #00ff41);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+  transform: translateY(-2px);
+}
+
+#chat {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff41;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 40px;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 65, 0.3),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+#messages {
+  list-style-type: none;
+  padding: 15px;
+  max-height: 250px;
+  overflow-y: auto;
+  background: rgba(0, 20, 0, 0.6);
+  border: 1px solid #003300;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #00ff41 #001100;
+}
+
+#messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+#messages::-webkit-scrollbar-track {
+  background: #001100;
+  border-radius: 4px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background: #00ff41;
+  border-radius: 4px;
+}
+
+#messages li {
+  padding: 8px 12px;
+  margin: 5px 0;
+  background: rgba(0, 255, 65, 0.1);
+  border-left: 3px solid #00ff41;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  animation: messageAppear 0.3s ease-out;
+}
+
+@keyframes messageAppear {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+#form {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+input {
+  flex: 1;
+  padding: 12px 15px;
+  background: rgba(0, 20, 0, 0.8);
+  border: 2px solid #003300;
+  border-radius: 6px;
+  color: #00ff41;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #00ff41;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+  background: rgba(0, 30, 0, 0.9);
+}
+
+input::placeholder {
+  color: #004400;
+}
+
+button {
+  padding: 12px 20px;
+  background: linear-gradient(45deg, #00ff41, #39ff14);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover {
+  background: linear-gradient(45deg, #39ff14, #00ff41);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ff41, transparent);
+  margin: 30px 0;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.game-selector {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff41;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 65, 0.3),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.game-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.game-btn {
+  padding: 12px 25px;
+  background: rgba(0, 20, 0, 0.8);
+  color: #00ff41;
+  border: 2px solid #003300;
+  border-radius: 8px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 14px;
+}
+
+.game-btn:hover {
+  border-color: #00ff41;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+  background: rgba(0, 40, 0, 0.8);
+}
+
+.game-btn.active {
+  background: linear-gradient(45deg, #00ff41, #39ff14);
+  color: #000;
+  border-color: #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+}
+
+.game-container {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff41;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 65, 0.3),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.game-container h3 {
+  color: #00ff41;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-align: center;
+  text-shadow: 0 0 10px #00ff41;
+}
+
+/* Breakout Specific Styles */
+#breakout-canvas {
+  display: block;
+  margin: 20px auto;
+  border: 2px solid #00ff41;
+  border-radius: 8px;
+  background: #000;
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+  max-width: 100%;
+  height: auto;
+}
+
+.breakout-controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#start-breakout-btn {
+  padding: 15px 30px;
+  background: linear-gradient(45deg, #00ff41, #39ff14);
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+#start-breakout-btn:hover {
+  background: linear-gradient(45deg, #39ff14, #00ff41);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+  transform: translateY(-2px);
+}
+
+#breakout-instructions {
+  background: rgba(0, 20, 0, 0.6);
+  border: 1px solid #003300;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+#breakout-instructions p {
+  margin: 5px 0;
+  color: #00aa33;
+  font-size: 12px;
+  font-family: 'Fira Code', monospace;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 120px);
+  grid-gap: 8px;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.cell {
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 20, 0, 0.6);
+  border: 2px solid #003300;
+  font-size: 48px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #00ff41;
+  font-family: 'Fira Code', monospace;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.cell:hover {
+  background: rgba(0, 40, 0, 0.8);
+  border-color: #00ff41;
+  box-shadow: 
+    0 0 20px rgba(0, 255, 65, 0.4),
+    inset 0 0 20px rgba(0, 255, 65, 0.1);
+  transform: scale(1.05);
+}
+
+.cell:hover::before {
+  left: 100%;
+}
+
+.cell:active {
+  transform: scale(0.95);
+}
+
+/* Terminal-like cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.terminal-cursor::after {
+  content: '█';
+  animation: blink 1s infinite;
+  color: #00ff41;
+}
+
+/* Intro Cutscene Styles */
+.cutscene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #000 0%, #001122 50%, #000033 100%);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: cutsceneAppear 1s ease-out;
+}
+
+.cutscene-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 40px;
+}
+
+.logo-container {
+  margin-bottom: 40px;
+}
+
+.cyber-logo {
+  font-size: 3.5rem;
+  font-family: 'Fira Code', monospace;
+  background: linear-gradient(45deg, #00ff41, #00cc33, #39ff14, #00ffaa);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: logoGlow 3s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(0, 255, 65, 0.8);
+  filter: drop-shadow(0 0 20px #00ff41);
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 20px #00ff41); }
+  50% { filter: drop-shadow(0 0 40px #00ff41) drop-shadow(0 0 60px #39ff14); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.creator-info {
+  margin: 30px 0;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 1.5s forwards;
+}
+
+.working-text {
+  color: #00aa33;
+  font-size: 1.2rem;
+  font-family: 'Fira Code', monospace;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+.creator-text {
+  color: #ff6600;
+  font-size: 1.4rem;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px rgba(255, 102, 0, 0.6);
+}
+
+.creator-name {
+  color: #00ff41;
+  font-size: 2rem;
+  font-family: 'Fira Code', monospace;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-shadow: 0 0 25px rgba(0, 255, 65, 0.8);
+  animation: nameGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes nameGlow {
+  from { text-shadow: 0 0 25px rgba(0, 255, 65, 0.8); }
+  to { text-shadow: 0 0 35px rgba(0, 255, 65, 1), 0 0 45px rgba(57, 255, 20, 0.6); }
+}
+
+.loading-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 255, 65, 0.2);
+  border-radius: 2px;
+  margin: 40px 0 20px 0;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 2.5s forwards;
+}
+
+.loading-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff41, #39ff14, #00ffaa);
+  border-radius: 2px;
+  width: 0%;
+  animation: loading 3s ease-in-out 3s forwards;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.8);
+}
+
+@keyframes loading {
+  to { width: 100%; }
+}
+
+.system-text {
+  color: #ffaa00;
+  font-size: 1rem;
+  font-family: 'Fira Code', monospace;
+  margin: 20px 0;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 3.5s forwards, blink 1.5s ease-in-out 4s infinite;
+}
+
+.skip-text {
+  color: #666;
+  font-size: 0.9rem;
+  font-family: 'Fira Code', monospace;
+  margin-top: 30px;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 5s forwards;
+}
+
+@keyframes cutsceneAppear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+/* Matrix rain effect elements */
+.matrix-char {
+  position: fixed;
+  color: #00ff41;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
+  animation: matrixFall 3s linear infinite;
+}
+
+@keyframes matrixFall {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Block Drop Game Styles */
+#block-canvas {
+  display: block;
+  margin: 20px auto;
+  border: 2px solid #00ff41;
+  border-radius: 8px;
+  background: #000;
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+  max-width: 100%;
+  height: auto;
+}
+
+.block-controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#start-block-btn {
+  padding: 15px 30px;
+  background: linear-gradient(45deg, #ff00ff, #ff3399);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+#start-block-btn:hover {
+  background: linear-gradient(45deg, #ff3399, #ff00ff);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+#block-instructions {
+  background: rgba(0, 20, 0, 0.6);
+  border: 1px solid #003300;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+#block-instructions p {
+  margin: 5px 0;
+  color: #00aa33;
+  font-size: 12px;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .board {
+    grid-template-columns: repeat(3, 80px);
+  }
+
+  .cell {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  .game-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .game-btn {
+    width: 200px;
+  }
+
+  #breakout-canvas {
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+  }
+
+  #block-canvas {
+    width: 100%;
+    max-width: 300px;
+    height: 400px;
+  }
+
+  .modal-content {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+}
+
+#breakout-canvas, #block-canvas {
+  border: 2px solid #00ff41;
+  border-radius: 8px;
+  background: #000;
+  margin: 20px auto;
+  display: block;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 65, 0.3),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  cursor: crosshair;
+  outline: none;
+}
+
+#breakout-canvas:focus, #block-canvas:focus {
+  border-color: #39ff14;
+  box-shadow: 
+    0 0 40px rgba(57, 255, 20, 0.5),
+    inset 0 0 30px rgba(57, 255, 20, 0.2);
+}
